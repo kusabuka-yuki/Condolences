@@ -145,7 +145,7 @@ namespace Condolences
                     {
 
                         // すでに登録されているか確認
-                        var selectSql = $"SELECT COUNT(*) FROM deceaseds " +
+                        var selectSql = $"SELECT COUNT(*) FROM Deceaseds " +
                             $"WHERE area = '{deceased.Area}' AND name = '{deceased.Name}' AND " +
                             $"age = {deceased.Age} AND published_at = '{deceased.PublishedAt}';";
 
@@ -161,7 +161,7 @@ namespace Condolences
                         }
 
                         // 登録
-                        var insertSql = $"INSERT INTO deceaseds (area, name, age, published_at) " +
+                        var insertSql = $"INSERT INTO Deceaseds (area, name, age, published_at) " +
                             $"VALUES ('{deceased.Area}','{deceased.Name}',{deceased.Age},'{deceased.PublishedAt}')";
 
                         using (var myCommand = new MySqlCommand(insertSql, connect))
