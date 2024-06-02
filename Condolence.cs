@@ -35,7 +35,7 @@ namespace Condolences
             // 終了
             if (success)
             {
-                Console.WriteLine($"正常終了しました。対象件数:{addedCount}");
+                Console.WriteLine($"正常終了しました。保存件数:{addedCount}");
             }
             else
             {
@@ -117,7 +117,7 @@ namespace Condolences
                             }
                             string publishedAt = infoItems[(int)ECondolencesList.PublishedAt];
                             string area = areaElement.InnerHtml;
-                            Console.WriteLine($"area: {area} / name_kanji: {name_kanji}");
+                            Console.WriteLine($"area: {area} / name_kanji: {name_kanji} / age: {age}");
                             var deceased = new Deceased(area, name_kanji, age, publishedAt);
                             Deceaseds.Add(deceased);
                         }
@@ -143,7 +143,6 @@ namespace Condolences
                 {
                     foreach (var deceased in Deceaseds)
                     {
-
                         // すでに登録されているか確認
                         var selectSql = $"SELECT COUNT(*) FROM Deceaseds " +
                             $"WHERE area = '{deceased.Area}' AND name = '{deceased.Name}' AND " +
@@ -151,12 +150,18 @@ namespace Condolences
 
                         using (var myCommand = new MySqlCommand(selectSql, connect))
                         {
-                            var result = myCommand.ExecuteScalar();
-
-                            if (result == null || Convert.ToInt32(result) > 0)
+                            try
                             {
-                                // すでに登録されている場合は次へ
-                                continue;
+                                var result = myCommand.ExecuteScalar();
+                                if (result == null || Convert.ToInt32(result) > 0)
+                                {
+                                    // すでに登録されている場合は次へ
+                                    continue;
+                                }
+                            }
+                            catch
+                            {
+                                Console.WriteLine($"例外が発生！ {selectSql}");
                             }
                         }
 
@@ -171,6 +176,11 @@ namespace Condolences
                         addedCount++;
                     }
                     success = true;
+                }
+                catch (MySqlConnector.MySqlException myEx)
+                {
+                    Console.WriteLine(myEx.Message);
+                    success = false;
                 }
                 catch (Exception ex)
                 {
