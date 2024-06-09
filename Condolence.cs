@@ -9,7 +9,7 @@ namespace Condolences
     internal class Condolence
     {
         private string address = @"https://memorix-shinmai.com/condolences_list";
-        private Regex regex = new Regex(@"(\S+)\((\S+)\)さん(\d.+)歳【(\S+)掲載】");
+        private Regex regex = new Regex(@"(\S+)\((\S+)\)さん(\d.+)?歳【(\S+)掲載】");
         private string connectionString = ConfigurationManager.ConnectionStrings["mariadbconnect"].ConnectionString;
         private List<Deceased> Deceaseds= new List<Deceased>();
 
@@ -114,6 +114,7 @@ namespace Condolences
                             if (!int.TryParse(infoItems[(int)ECondolencesList.Age], out int age))
                             {
                                 age = -1;
+                                infoItems.Insert((int)ECondolencesList.Age, age.ToString());
                             }
                             string publishedAt = infoItems[(int)ECondolencesList.PublishedAt];
                             string area = areaElement.InnerHtml;
