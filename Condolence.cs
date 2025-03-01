@@ -9,7 +9,7 @@ namespace Condolences
     internal class Condolence
     {
         private string address = @"https://memorix-shinmai.com/condolences_list";
-        private Regex regex = new Regex(@"(\S+)\((\S+)\)さん(\d.+)?歳【(\S+)掲載】");
+        private Regex regex = new Regex(@"(\S+)\((\S+)\)さん(\d+)?歳【(\S+)掲載】");
         private string connectionString = ConfigurationManager.ConnectionStrings["mariadbconnect"].ConnectionString;
         private List<Deceased> Deceaseds= new List<Deceased>();
 
@@ -60,9 +60,10 @@ namespace Condolences
                 var parentFrame = document.GetElementById("parent_frame");
                 if(parentFrame == null) { return; }
                 var childFrame = parentFrame.GetElementsByClassName("card");
-
-                foreach(var (childElement, idx) in childFrame.Select((childElement, idx)=>(childElement, idx+1)))
-                {
+                
+                //foreach(var (childElement, idx) in childFrame.Select((childElement, idx)=>(childElement, idx+1)))
+                    for(int idx = 1; idx <= 4; idx++)
+                    {
                     // 都市ごとの固まりを取得
                     var areaIdElement = document.GetElementById($"area_{idx}");
 
